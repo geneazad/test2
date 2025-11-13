@@ -1,0 +1,38 @@
+<h1>Customers</h1>
+
+<h2>Add Customer</h2>
+<form class='storeForm' action="/customers" method="POST">
+    <label>Name:</label>
+    <input type="text" name="cust_name" required>
+    <label>House:</label>
+    <input type="text" name="cust_house">
+    <button type="submit">Add</button>
+</form>
+
+<hr>
+
+<h2>Existing Customers</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>House</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each customers}}
+        <tr>
+            <td>{{id_customer}}</td>
+            <td>{{cust_name}}</td>
+            <td>{{cust_house}}</td>
+            <td>
+                <form action="/customers/delete/{{id_customer}}" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

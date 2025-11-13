@@ -1,0 +1,50 @@
+<h1>Product Orders (Line Items)</h1>
+
+<h2>Add Product to Order</h2>
+<form class='storeForm' action="/product_orders" method="POST">
+    <label>Product:</label>
+    <select name="products_id_product" required>
+        {{#each products}}
+            <option value="{{id_product}}">{{product_name}}</option>
+        {{/each}}
+    </select>
+    <label>Order:</label>
+    <select name="orders_id_order" required>
+        {{#each orders}}
+            <option value="{{id_order}}">#{{id_order}} — {{order_date}}</option>
+        {{/each}}
+    </select>
+    <label>Quantity:</label>
+    <input type="number" name="quantity" min="1" required>
+    <button type="submit">Add to Order</button>
+</form>
+
+<hr>
+
+<h2>Existing Product Orders</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Order</th>
+            <th>Quantity</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each product_orders}}
+        <tr>
+            <td>{{product_name}}</td>
+            <td>#{{order_id}} ({{order_date}})</td>
+            <td>{{quantity}}</td>
+            <td>
+                <form action="/product_orders/delete" method="POST">
+                    <input type="hidden" name="products_id_product" value="{{product_id}}">
+                    <input type="hidden" name="orders_id_order" value="{{order_id}}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
