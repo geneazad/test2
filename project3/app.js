@@ -48,6 +48,57 @@ app.get('/customers', async (req, res) => {
 });
 
 
+//#############
+//## CATEGORIES
+
+// READ
+app.get('/categories', async (req, res) => {
+    try {
+        const [categories] = await db.query('SELECT * FROM categories;');
+        res.render('categories', { categories, error: req.query.error });
+    } catch (error) {
+        console.error('Error loading categories:', error);
+        res.status(500).send('An error occurred while loading categories.');
+    }
+});
+
+// CREATE
+app.post('/categories', async (req, res) => {
+    const { category_name, description } = req.body;
+
+    try {
+        await db.query(
+            'INSERT INTO categories (category_name, description) VALUES (?, ?);',
+            [category_name, description]
+        );
+        res.redirect('/categories');
+    } catch (error) {
+        console.error('Error adding category:', error);
+        const message = encodeURIComponent('Failed to add category. Please try again.');
+        res.redirect(`/categories?error=${message}`);
+    }
+});
+
+// DELETE
+app.post('/categories/delete/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await db.query('DELETE FROM categories WHERE id_category = ?;', [id]);
+        res.redirect('/categories');
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        let message = 'Failed to delete category. Please try again.';
+
+        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+            message = 'Cannot delete category because it is in use.';
+        }
+
+        res.redirect(`/categories?error=${encodeURIComponent(message)}`);
+    }
+});
+
+
 //###########
 //## PRODUCTS
 
